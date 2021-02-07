@@ -25,6 +25,7 @@ function optimize(
         mo::Brent;
         rel_tol::T = sqrt(eps(T)),
         abs_tol::T = eps(T),
+        target::Union{T,Nothing} = nothing,
         iterations::Integer = 1_000,
         store_trace::Bool = false,
         show_trace::Bool = false,
@@ -74,6 +75,11 @@ function optimize(
     end
 
     while iteration < iterations && !stopped_by_callback
+
+        if target != nothing && new_minimum < target
+            converged = true
+            break
+        end
 
         p = zero(T)
         q = zero(T)
